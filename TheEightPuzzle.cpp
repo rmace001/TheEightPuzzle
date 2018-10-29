@@ -16,15 +16,22 @@ using namespace std;
 
 
 int main (){
-  int choice = -1;
+  int isDefault = -1;
   cout << "Welcome to Rogelio Macedo's 8-puzzle solver. \n";
   cout << "Enter \"1\" to use a default puzzle, or \"2\" to enter your own puzzle \n";
-  cin >> choice;
-  if (choice == 1){
-    cout << "yaaay you selected 1.\n";
+  cout << "(Enter -1 to quit)\n\n";
+  cin >> isDefault;
+  if (isDefault == 1){
+    cout << "You selected 1.\n";
   }
-  else if (choice == 2){
-    cout << "Okay, 2 was selected.\n";
+  else if (isDefault == 2){
+    cout << "You selected 2.\n";
+  }
+  
+  
+  else if (isDefault == -1){
+    cout << "Bye!\n";
+    return 0;
   }
   
   return 0;
