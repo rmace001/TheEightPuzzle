@@ -6,58 +6,10 @@ using namespace std;
 /////1. to report success
 /////2. to report failure (which is actually a success)
 /////3. to run until you run out of memory or time and kill the program 
-/*
-need to think of: 
--edge case: when a number is on the edge and you cant perform an operator (go_up(), down(), etc)
--unsigned shorts can be a value of 0 and if you subtract 1 from it, it warps around and gives you a very large positive number
--must think about a way to code my goal test
--There could be a chance that the problem resides in only figureing out how to add nodes to a queue
----That is, need to figure my heuristic function for A*
----This function should return the node with the cheapest cost
----
--Initial state
---given: 3x3 array
--Operators
---given: move blank up
-          blank down
-          blank left
-          blank right
-function generalSearch(EightPuzzle, UniformCostQueueing){
-  -make the queue in the order we need for this, and induce the initial state
-  a queue of arrays? 
-  
-  
-}
 
-what if whe had a struct node with a 4x4 array and an associted rank variable.
-this rank is meant for the heuristic and therefore the queing function. 
-
-*/
-
-
-//////////////////////UNIFORM COST SEARCH//////////////////////////////
-/*
-*/
-
-
-
-//////////////////////A* with misplaced tile heuristic/////////////////
-/*
-What I need is to:
- - build Heurisitc() function for misplaced tile
-*/
-
-//////////////////////A* with manhatan distance heuristic//////////////
-/*
-*/
-
-struct Node {
-  int x; 
-  Node(int var){
-    x = var;
-  }
+struct node {
+  unsigned short arr[3][3];
 };
-
 
 
 
