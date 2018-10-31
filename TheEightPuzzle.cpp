@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 using namespace std;
 
 //////Three possible outcomes of search:
@@ -22,6 +23,15 @@ struct node {
       }
     }
   }
+  node(){} //default constructor
+  
+  node(node& n){ //copy constructor
+    for (short i=0; i<3; i++){
+      for (short j=0; j<3; j++){
+        arr[i][j] = n.arr[i][j];
+      }
+    }
+  }
   
   void buildArray(unsigned short a, unsigned short b, unsigned short c,
                   unsigned short d, unsigned short e, unsigned short f,
@@ -40,11 +50,104 @@ struct node {
 };
 
 
+//Helper Functions
+void buildPuzzle(node& n);
+void buildDefault(node& n);
+//node testFunction(node& n);
+//node UniformCostSearch();
+void buildPuzzle(node& n)
+{
+  unsigned short a, b, c, d, e, f, g, h, i;
+  cout << "Enter each element of the puzzle separately," << endl;
+  cout << "and the number 0 as the blank space." << endl;
+  cout << "\"Error\" prints if value entered is not a number" << endl;
+  cin >> a;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> a;
+  }
+  cin >> b;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> b;
+  }
+  cin >> c;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> c;
+  }
+  cin >> d;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> d;
+  }
+  cin >> e;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> e;
+  }
+  cin >> f;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> f;
+  }
+  cin >> g;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> g;
+  }
+  cin >> h;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> h;
+  }
+  cin >> i;
+  while(cin.fail()) {
+    cout << "Error" << endl;
+    cin.clear();
+    cin.ignore(256,'\n');
+    cin >> i;
+  }
+  n.buildArray(a, b, c,
+                    d, e, f, 
+                    g, h, i);
+}
+
+void buildDefault(node& n){
+  n.buildArray(1, 2, 0, 4, 5, 3, 7, 8, 6);
+}
+
+// node testFunction(node& n){
+//   return n;
+// }
+
+// node UniformCostSearch(){
+  
+// }
+
+
 
 
 int main (){
   
   int isDefault = -1;
+  node n;
     
   cout << "Welcome to Rogelio Macedo's 8-puzzle solver. \n";
   cout << "Enter \"1\" to use a default puzzle, or \"2\" to enter your own puzzle \n";
@@ -53,93 +156,24 @@ int main (){
   while (isDefault != -1){
     if (isDefault == 1){
       cout << "You selected 1.\n";
+      buildDefault(n);
+      n.print();
     }
     else if (isDefault == 2){
       cout << "You selected 2.\n";
-      unsigned short a, b, c, d, e, f, g, h, i;
-      cout << "Enter each element of the puzzle separately," << endl;
-      cout << "and the number 0 as the blank space." << endl;
-      cout << "\"Error\" prints if value entered is not a number" << endl;
-      cin >> a;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> a;
-      }
-      cin >> b;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> b;
-      }
-      cin >> c;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> c;
-      }
-      cin >> d;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> d;
-      }
-      cin >> e;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> e;
-      }
-      cin >> f;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> f;
-      }
-      cin >> g;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> g;
-      }
-      cin >> h;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> h;
-      }
-      cin >> i;
-      while(cin.fail()) {
-        cout << "Error" << endl;
-        cin.clear();
-        cin.ignore(256,'\n');
-        cin >> i;
-      }
-      node n;
-      n.buildArray(a, b, c,
-                    d, e, f, 
-                    g, h, i);
+      buildPuzzle(n);
       n.print();
+      
     }
-    
     else if (isDefault == -1){
       cout << "Bye!\n";
       return 0;
     }
-   
+    cout << endl;
+    node x(n);
+    x.print();
     
-    /////////////NODE TESTING////////////
-    cout << "printing default node n" << endl;
-    node n; 
-    n.print();
+    //UniformCostSearch().print();
     cout << "Enter \"1\" to use a default puzzle, or \"2\" to enter your own puzzle \n";
     cout << "(Enter -1 to quit)\n\n";
     cin >> isDefault;
