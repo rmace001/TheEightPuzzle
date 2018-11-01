@@ -12,15 +12,17 @@ using namespace std;
 //How do I define how my priority queue orders my nodes? what defines priority for the node class? 
 //////might need to overload both the < and > operators, since this is needed for the priority queue
 //////also might need to add some sort of hueristic data member as part of the node class for priority queue comparison
+//////need to have my operators update the node's heuristic data member
 
 
 
 struct node {
   unsigned short arr[3][3];
-  
+  unsigned int heuristic = 1; 
   node(){} //default constructor
   
   node(node& n){ //copy constructor
+    heuristic = n.heuristic;
     for (short i=0; i<3; i++){
       for (short j=0; j<3; j++){
         arr[i][j] = n.arr[i][j];
@@ -56,6 +58,13 @@ struct node {
     arr[2][1] = h;
     arr[2][2] = i;
   }
+  
+  bool operator< (const node& n)  const {
+    return (heuristic < n.heuristic);
+  }
+  bool operator> (const node& n)  const {
+    return (heuristic > n.heuristic);
+  }
 };
 
 
@@ -63,7 +72,7 @@ struct node {
 void buildPuzzle(node& n);
 void buildDefault(node& n);
 //node testFunction(node& n);
-//node UniformCostSearch();
+node UniformCostSearch();
 void buildPuzzle(node& n)
 {
   unsigned short a, b, c, d, e, f, g, h, i;
@@ -146,9 +155,9 @@ void buildDefault(node& n){
 //   return n;
 // }
 
-// node UniformCostSearch(){
+node UniformCostSearch(){
   
-// }
+}
 
 
 
