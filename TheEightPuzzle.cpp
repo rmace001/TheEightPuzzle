@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
+#include <functional>
+#include <cstdlib>
 using namespace std;
 
 //////Three possible outcomes of search:
@@ -20,8 +23,8 @@ struct node {
   unsigned short arr[3][3];
   unsigned int heuristic = 1; 
   node(){} //default constructor
-  
-  node(node& n){ //copy constructor
+  ~node(){}
+  node(const node& n){ //copy constructor
     heuristic = n.heuristic;
     for (short i=0; i<3; i++){
       for (short j=0; j<3; j++){
@@ -59,13 +62,14 @@ struct node {
     arr[2][2] = i;
   }
   
-  bool operator< (const node& n)  const {
-    return (heuristic < n.heuristic);
+  bool operator < (const node rhs) const { 
+    return (heuristic > rhs.heuristic);
   }
-  bool operator> (const node& n)  const {
-    return (heuristic > n.heuristic);
-  }
+  
 };
+
+
+
 
 
 //Helper Functions
@@ -156,7 +160,7 @@ void buildDefault(node& n){
 // }
 
 node UniformCostSearch(){
-  
+  priority_queue<node>  q;
 }
 
 
@@ -196,19 +200,5 @@ int main (){
     cout << "(Enter -1 to quit)\n\n";
     cin >> isDefault;
   }
-  
-  // Node n;
-  // n.x = 1;
-  // cout << n.x << endl;
-  //tested fact that struct datamembers can be referenced using dot operator
-  
-  // Node n(4);
-  // cout << n.x << endl;
-  //structs can have custom constructors
-  
-  ///////////END NODE TESTING///////////
-  
-  
-  
   return 0;
 }
