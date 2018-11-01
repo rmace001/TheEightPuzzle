@@ -65,6 +65,20 @@ struct node {
   bool operator < (const node rhs) const { 
     return (heuristic > rhs.heuristic);
   }
+  node & operator= (const node &rhs)
+  {
+    if (this != &rhs)
+    {
+      heuristic = rhs.heuristic;
+      for (short i=0; i<3; i++){
+        for (short j=0; j<3; j++){
+        arr[i][j] = rhs.arr[i][j];
+        }
+      }
+      
+    }
+    return *this;
+  }
   
 };
 
@@ -76,7 +90,7 @@ struct node {
 void buildPuzzle(node& n);
 void buildDefault(node& n);
 //node testFunction(node& n);
-node UniformCostSearch();
+bool UniformCostSearch(node& n);
 void buildPuzzle(node& n)
 {
   unsigned short a, b, c, d, e, f, g, h, i;
@@ -159,9 +173,19 @@ void buildDefault(node& n){
 //   return n;
 // }
 
-node UniformCostSearch(){
+bool UniformCostSearch(node& n){
   priority_queue<node>  q;
+  //node currrent;
+  q.push(n); //add initial state to the queue
+  while(!q.empty()){
+    
+  }
+  
+  
+  
+  return false;
 }
+
 
 
 
@@ -195,10 +219,14 @@ int main (){
     node x(n);
     x.print();
     
-    //UniformCostSearch().print();
+    if(UniformCostSearch(n))
+      n.print();
+    else
+      cout << "Failure, there is no solution found." << endl;
     cout << "Enter \"1\" to use a default puzzle, or \"2\" to enter your own puzzle \n";
     cout << "(Enter -1 to quit)\n\n";
     cin >> isDefault;
   }
+  
   return 0;
 }
