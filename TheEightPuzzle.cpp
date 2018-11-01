@@ -8,8 +8,25 @@ using namespace std;
 /////2. to report failure (which is actually a success)
 /////3. to run until you run out of memory or time and kill the program 
 
+
+//How do I define how my priority queue orders my nodes? what defines priority for the node class? 
+//////might need to overload both the < and > operators, since this is needed for the priority queue
+//////also might need to add some sort of hueristic data member as part of the node class for priority queue comparison
+
+
+
 struct node {
   unsigned short arr[3][3];
+  
+  node(){} //default constructor
+  
+  node(node& n){ //copy constructor
+    for (short i=0; i<3; i++){
+      for (short j=0; j<3; j++){
+        arr[i][j] = n.arr[i][j];
+      }
+    }
+  }
   
   void print(){
     for (short i=0; i<3; i++){
@@ -23,15 +40,7 @@ struct node {
       }
     }
   }
-  node(){} //default constructor
   
-  node(node& n){ //copy constructor
-    for (short i=0; i<3; i++){
-      for (short j=0; j<3; j++){
-        arr[i][j] = n.arr[i][j];
-      }
-    }
-  }
   
   void buildArray(unsigned short a, unsigned short b, unsigned short c,
                   unsigned short d, unsigned short e, unsigned short f,
