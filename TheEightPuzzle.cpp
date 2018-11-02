@@ -6,6 +6,9 @@
 #include <cstdlib>
 using namespace std;
 
+
+unsigned short solved[3][3]= {{1,2,3},{4,5,6},{7,8,0}};
+
 //////Three possible outcomes of search:
 /////1. to report success
 /////2. to report failure (which is actually a success)
@@ -21,7 +24,8 @@ using namespace std;
 
 struct node {
   unsigned short arr[3][3];
-  unsigned int heuristic = 1; 
+  unsigned short weight = 1; 
+  unsigned int heuristic = 0; //must have a function to calculate this 
   node(){} //default constructor
   ~node(){}
   node(const node& n){ //copy constructor
@@ -87,11 +91,13 @@ struct node {
 
 
 //Helper Functions
-void buildPuzzle(node& n);
-void buildDefault(node& n);
+bool goalTest(node* n);
+void buildPuzzle(node* n);
+void buildDefault(node* n);
 //node testFunction(node& n);
-bool UniformCostSearch(node& n);
-void buildPuzzle(node& n)
+bool UniformCostSearch(node* n);
+void queingFunction(priority_queue<node*>& q, node* currNode);
+void buildPuzzle(node* n)
 {
   unsigned short a, b, c, d, e, f, g, h, i;
   cout << "Enter each element of the puzzle separately," << endl;
@@ -160,24 +166,47 @@ void buildPuzzle(node& n)
     cin.ignore(256,'\n');
     cin >> i;
   }
-  n.buildArray(a, b, c,
+  n->buildArray(a, b, c,
                     d, e, f, 
                     g, h, i);
 }
 
-void buildDefault(node& n){
-  n.buildArray(1, 2, 0, 4, 5, 3, 7, 8, 6);
+void buildDefault(node* n){
+  n->buildArray(1, 2, 0, 4, 5, 3, 7, 8, 6);
 }
 
 // node testFunction(node& n){
 //   return n;
 // }
 
-bool UniformCostSearch(node& n){
-  priority_queue<node>  q;
-  //node currrent;
+bool goalTest(node* n){
+  for (short i=0; i<3; i++){
+    for (short j=0; j<3; j++){
+      if (solved[i][j] != n->arr[i][j]){
+          return false;
+      }
+    }
+  }
+  return true;
+}
+  
+
+
+
+bool UniformCostSearch(node* n){
+  priority_queue<node*>  q;
+  node* currNode;
   q.push(n); //add initial state to the queue
   while(!q.empty()){
+    currNode = q.top();
+    q.pop(); //pop the top element
+    if(goalTest(currNode)){
+      n = currNode;
+      return true; 
+    }
+    else{
+      queingFunction(q, currNode);
+    }
     
   }
   
@@ -187,13 +216,17 @@ bool UniformCostSearch(node& n){
 }
 
 
+void queingFunction(priority_queue<node*>& q, node* currNode){
+  
+}
+
 
 
 
 int main (){
   
   int isDefault = -1;
-  node n;
+  node* n = new node();
     
   cout << "Welcome to Rogelio Macedo's 8-puzzle solver. \n";
   cout << "Enter \"1\" to use a default puzzle, or \"2\" to enter your own puzzle \n";
@@ -203,12 +236,12 @@ int main (){
     if (isDefault == 1){
       cout << "You selected 1.\n";
       buildDefault(n);
-      n.print();
+      n->print();
     }
     else if (isDefault == 2){
       cout << "You selected 2.\n";
       buildPuzzle(n);
-      n.print();
+      n->print();
       
     }
     else if (isDefault == -1){
@@ -216,11 +249,11 @@ int main (){
       return 0;
     }
     cout << endl;
-    node x(n);
+    node x(*n);
     x.print();
     
     if(UniformCostSearch(n))
-      n.print();
+      n->print();
     else
       cout << "Failure, there is no solution found." << endl;
     cout << "Enter \"1\" to use a default puzzle, or \"2\" to enter your own puzzle \n";
