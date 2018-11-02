@@ -21,14 +21,17 @@ unsigned short solved[3][3]= {{1,2,3},{4,5,6},{7,8,0}};
 //////need to have my operators update the node's heuristic data member
 
 
-
-struct node {
+//Node Definition
+struct node
+{
   unsigned short arr[3][3];
   unsigned short weight = 1; 
   unsigned int heuristic = 0; //must have a function to calculate this 
   node(){} //default constructor
   ~node(){}
-  node(const node& n){ //copy constructor
+  node(const node& n)
+  { //copy constructor
+    weight = n.weight;
     heuristic = n.heuristic;
     for (short i=0; i<3; i++){
       for (short j=0; j<3; j++){
@@ -37,7 +40,8 @@ struct node {
     }
   }
   
-  void print(){
+  void print()
+  {
     for (short i=0; i<3; i++){
       for (short j=0; j<3; j++){
         if (j<2){
@@ -66,7 +70,8 @@ struct node {
     arr[2][2] = i;
   }
   
-  bool operator < (const node rhs) const { 
+  bool operator < (const node rhs) const 
+  { 
     return (heuristic > rhs.heuristic);
   }
   node & operator= (const node &rhs)
@@ -83,20 +88,34 @@ struct node {
     }
     return *this;
   }
-  
 };
 
 
 
 
-
-//Helper Functions
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////Helper Function Delcarations////////////////////////////
 bool goalTest(node* n);
 void buildPuzzle(node* n);
 void buildDefault(node* n);
-//node testFunction(node& n);
 bool UniformCostSearch(node* n);
 void queingFunction(priority_queue<node*>& q, node* currNode);
+void findBlank(node* currNode, unsigned short& row, unsigned short& col);
+void UP(unsigned short& row, unsigned short& col, node* n);
+//////////////////////End Helper Declarations//////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+bool goalTest(node* n)
+{
+  for (short i=0; i<3; i++){
+    for (short j=0; j<3; j++){
+      if (solved[i][j] != n->arr[i][j]){
+          return false;
+      }
+    }
+  }
+  return true;
+}
 void buildPuzzle(node* n)
 {
   unsigned short a, b, c, d, e, f, g, h, i;
@@ -170,30 +189,12 @@ void buildPuzzle(node* n)
                     d, e, f, 
                     g, h, i);
 }
-
-void buildDefault(node* n){
+void buildDefault(node* n)
+{
   n->buildArray(1, 2, 0, 4, 5, 3, 7, 8, 6);
 }
-
-// node testFunction(node& n){
-//   return n;
-// }
-
-bool goalTest(node* n){
-  for (short i=0; i<3; i++){
-    for (short j=0; j<3; j++){
-      if (solved[i][j] != n->arr[i][j]){
-          return false;
-      }
-    }
-  }
-  return true;
-}
-  
-
-
-
-bool UniformCostSearch(node* n){
+bool UniformCostSearch(node* n)
+{
   priority_queue<node*>  q;
   node* currNode;
   q.push(n); //add initial state to the queue
@@ -217,7 +218,68 @@ bool UniformCostSearch(node* n){
 
 
 void queingFunction(priority_queue<node*>& q, node* currNode){
-  
+  bool flagUp = true, flagDown = true, flagLeft = true, flagRight = true; 
+  unsigned short row, col;
+  findBlank(currNode, row, col);
+  if (row == 0){
+    flagUp = false;
+    if (col == 0){
+      flagLeft = false;
+    }
+    else if(col == 2){
+      flagRight = false;
+    }
+  }
+  else if (row == 1){
+    if (col == 0){
+      flagLeft = false;
+    }
+    else if (col == 2){
+      flagRight = false;
+    }
+  }
+  else if (row == 2){
+    flagDown = false;
+    if (col == 0){
+      flagLeft = false;
+    }
+    else if (col == 2){
+      flagRight = false;
+    }
+  }
+  if (flagUp){
+    node* n = new node(*currNode);
+    //UP(row, col, n);
+  }
+  if (flagDown){
+    
+  }
+  if (flagLeft){
+    
+  }
+  if (flagRight){
+    
+  }
+}
+
+void findBlank(node* currNode, unsigned short& row, unsigned short& col)
+{
+  for (short i=0; i<3; i++){
+    for (short j=0; j<3; j++){
+      if (currNode->arr[i][j] == 0){
+        row = i;
+        col = j;
+        return;
+      }
+    }
+  }
+}
+
+void UP(unsigned short& row, unsigned short& col, node* n)
+{
+  unsigned short temp = n->arr[row-1][col];//store above element
+  n->arr[row-1][col] = 0; //move blank up
+  n->arr[row][col] = temp;//move element down
 }
 
 
