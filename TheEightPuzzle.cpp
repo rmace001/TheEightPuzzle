@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <string>
+#include <stack>
 using namespace std;
 
 
@@ -14,7 +15,8 @@ struct node
 {
 	unsigned short arr[3][3];
 	unsigned short weight;
-	unsigned int heuristic; //must have a function to calculate this 
+	unsigned int heuristic; //must have a function to calculate this
+	node* parent = nullptr;
 	node() : weight(0), heuristic(0) {} //default constructor,                     MAY NEED TO RETURN A CONST OBJECT
 	~node() {}
 	
@@ -97,6 +99,7 @@ unsigned short solved[3][3] = { {1, 2, 3}, {4, 5, 6}, {7, 8, 0} };
 vector<string> repeated;
 int maxQsize = 0;	//reset these when I reset the vector
 int numExpand = 0; //reset these when I reset the vector
+int finalDepth = 0;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,6 +120,7 @@ void targetCoord(unsigned short& val, unsigned short& x, unsigned short& y);
 void addInstance(node*& n);
 string makeString(node*& n);
 unsigned short Heuristic(node*& n, int choice);
+void getPath(node*&n);
 //////////////////////End Helper Declarations//////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -208,9 +212,13 @@ void buildPuzzle(node*& n)
 }
 void buildDefault(node*& n)
 {
+	//n->buildArray(1, 2, 3, 4, 5, 6, 7, 8, 0); //trival
+	//n->buildArray(1, 2, 3, 4, 5, 6, 7, 0, 8); //very easy
 	//n->buildArray(1, 2, 0, 4, 5, 3, 7, 8, 6); //easy
-	//n->buildArray(8, 7, 1, 6, 0, 2, 5, 4, 3); //oh boy
-	n->buildArray(1, 2, 3, 4, 5, 6, 7, 0, 8); //very easy
+	//n->buildArray(0, 1, 2, 4, 5, 3, 7, 8, 6); //doable
+	n->buildArray(8, 7, 1, 6, 0, 2, 5, 4, 3); //oh boy
+	//n->buildArray(1, 2, 3, 4, 5, 6, 8, 7, 0); //impossible
+	
 }
 bool UniformCostSearch(node*& n, node*& goal, int choice) //bool UniformCostSearch(node*& n, node*& goal, int choice)
 {
@@ -219,14 +227,16 @@ bool UniformCostSearch(node*& n, node*& goal, int choice) //bool UniformCostSear
 	q.push(n); //add initial state to the queue
 	while (!q.empty()) {
 		currNode = q.top();
-		cout << "The Best state to expand when g(n) = " << currNode->weight;
-		cout << " and h(n) = " << currNode->heuristic  << " is..." << endl;
-		currNode->print();
+		// cout << "The Best state to expand when g(n) = " << currNode->weight;
+		// cout << " and h(n) = " << currNode->heuristic  << " is..." << endl;
+		// currNode->print();
 		addInstance(currNode);
 		maxQsize = maxQsize > q.size() ? maxQsize : q.size();
 		q.pop(); //pop the top element
 		if (goalTest(currNode)) {
 			goal = currNode;
+			finalDepth = goal->weight;
+			getPath(goal);
 			return true;
 		}
 		else {
@@ -243,7 +253,6 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 	bool flagUp = true, flagDown = true, flagLeft = true, flagRight = true;
 	unsigned short row, col;
 	findBlank(currNode, row, col);
-	cout << "Row, Col: " << row << ',' << col << endl;
 	if (row == 0) {
 		flagUp = false;
 		if (col == 0) {
@@ -279,6 +288,7 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 		n->heuristic = heuristic;
 		string s = makeString(n);
 		if (!(find(repeated.begin(), repeated.end(), s) != repeated.end())) {
+			n->parent = currNode;
 			q.push(n);
 		}
 	}
@@ -291,6 +301,7 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 		n->heuristic = heuristic;
 		string s = makeString(n);
 		if (!(find(repeated.begin(), repeated.end(), s) != repeated.end())) {
+			n->parent = currNode;
 			q.push(n);
 		}
 	}
@@ -303,6 +314,7 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 		n->heuristic = heuristic;
 		string s = makeString(n);
 		if (!(find(repeated.begin(), repeated.end(), s) != repeated.end())) {
+			n->parent = currNode;
 			q.push(n);
 		}
 	}
@@ -315,6 +327,7 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 		n->heuristic = heuristic;
 		string s = makeString(n);
 		if (!(find(repeated.begin(), repeated.end(), s) != repeated.end())) {
+			n->parent = currNode;
 			q.push(n);
 		}
 	}
@@ -477,6 +490,26 @@ string makeString(node*& n)
 	return s;
 }
 
+
+void getPath(node*&n){
+	stack<node*> stack;
+	while(n != nullptr){
+		stack.push(n);
+		n = n->parent;
+	}
+	
+	while(!stack.empty()){
+		cout << "The Best state to expand when g(n) = " << stack.top()->weight;
+		cout << " and h(n) = " << stack.top()->heuristic  << " is..." << endl;
+		stack.top()->print();
+		stack.pop();
+	}
+	
+}
+
+
+
+
 int main() 
 {
 
@@ -519,7 +552,7 @@ int main()
 			cout << numExpand << " nodes." << endl;
 			cout << "The maximum number of nodes in the queue at any one time was ";
 			cout << maxQsize << "." << endl;
-			cout << "The depth of the goal node was " << goal->weight << "." << endl;
+			cout << "The depth of the goal node was " << finalDepth << "." << endl;
 			
 		}
 		else {
