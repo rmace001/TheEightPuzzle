@@ -7,17 +7,13 @@
 #include <string>
 #include <stack>
 using namespace std;
-
-
-
-
 struct node
 {
 	unsigned short arr[3][3];
 	unsigned short weight;
 	unsigned int heuristic; //must have a function to calculate this
 	node* parent = nullptr;
-	node() : weight(0), heuristic(0) {} //default constructor,                     MAY NEED TO RETURN A CONST OBJECT
+	node() : weight(0), heuristic(0) {} //default constructor
 	~node() {}
 	
 	node(const node& n)
@@ -44,8 +40,7 @@ struct node
 			}
 		}
 	}
-
-
+	
 	void buildArray(unsigned short a, unsigned short b, unsigned short c,
 		unsigned short d, unsigned short e, unsigned short f,
 		unsigned short g, unsigned short h, unsigned short i)
@@ -60,16 +55,7 @@ struct node
 		arr[2][1] = h;
 		arr[2][2] = i;
 	}
-/*
-	bool operator < (const node rhs) const
-	{
-		return ((weight+heuristic) < (rhs.weight+rhs.heuristic));
-	}
-	bool operator > (const node rhs) const
-	{
-		return ((weight + heuristic) > (rhs.weight + rhs.heuristic));
-	}
-	*/
+	
 	node & operator= (const node &rhs)
 	{
 		if (this != &rhs)
@@ -101,13 +87,12 @@ int maxQsize = 0;	//reset these when I reset the vector
 int numExpand = 0; //reset these when I reset the vector
 int finalDepth = 0;
 
-
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////Helper Function Delcarations////////////////////////////
 bool goalTest(node* n);
 void buildPuzzle(node*& n);
 void buildDefault(node*& n);
-bool UniformCostSearch(node*& n, node*& goal, int choice);
+bool aStar(node*& n, node*& goal, int choice);
 void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& currNode, int choice);
 void findBlank(node* currNode, unsigned short& row, unsigned short& col);
 void UP(unsigned short& row, unsigned short& col, node*& n);
@@ -124,10 +109,6 @@ void getPath(node*&n);
 //////////////////////End Helper Declarations//////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
 bool goalTest(node* n)
 {
 	for (short i = 0; i<3; i++) {
@@ -139,6 +120,7 @@ bool goalTest(node* n)
 	}
 	return true;
 }
+
 void buildPuzzle(node*& n)
 {
 	unsigned short a, b, c, d, e, f, g, h, i;
@@ -210,26 +192,25 @@ void buildPuzzle(node*& n)
 	}
 	n->buildArray(a, b, c, d, e, f, g, h, i);
 }
+
 void buildDefault(node*& n)
 {
 	//n->buildArray(1, 2, 3, 4, 5, 6, 7, 8, 0); //trival
 	//n->buildArray(1, 2, 3, 4, 5, 6, 7, 0, 8); //very easy
 	//n->buildArray(1, 2, 0, 4, 5, 3, 7, 8, 6); //easy
-	//n->buildArray(0, 1, 2, 4, 5, 3, 7, 8, 6); //doable
-	n->buildArray(8, 7, 1, 6, 0, 2, 5, 4, 3); //oh boy
+	n->buildArray(0, 1, 2, 4, 5, 3, 7, 8, 6); //doable
+	//n->buildArray(8, 7, 1, 6, 0, 2, 5, 4, 3); //oh boy
 	//n->buildArray(1, 2, 3, 4, 5, 6, 8, 7, 0); //impossible
 	
 }
-bool UniformCostSearch(node*& n, node*& goal, int choice) //bool UniformCostSearch(node*& n, node*& goal, int choice)
+
+bool aStar(node*& n, node*& goal, int choice)
 {
 	priority_queue<node*, vector<node*>, compare >  q;
 	node* currNode;
 	q.push(n); //add initial state to the queue
 	while (!q.empty()) {
 		currNode = q.top();
-		// cout << "The Best state to expand when g(n) = " << currNode->weight;
-		// cout << " and h(n) = " << currNode->heuristic  << " is..." << endl;
-		// currNode->print();
 		addInstance(currNode);
 		maxQsize = maxQsize > q.size() ? maxQsize : q.size();
 		q.pop(); //pop the top element
@@ -246,7 +227,6 @@ bool UniformCostSearch(node*& n, node*& goal, int choice) //bool UniformCostSear
 	}
 	return false;
 }
-
 
 void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& currNode, int choice)
 {
@@ -376,8 +356,6 @@ void RIGHT(unsigned short& row, unsigned short& col, node*& n)
 	n->arr[row][col] = temp;//move element down
 }
 
-
-
 unsigned short misplacedTile(node*& n)
 {
 	unsigned short count = 0;
@@ -409,6 +387,7 @@ unsigned short manhattanDist(node*& n)
 	}
 	return total;
 }
+
 unsigned short Heuristic(node*& n, int choice)
 {
 	if (choice == 1){
@@ -425,9 +404,6 @@ unsigned short Heuristic(node*& n, int choice)
 		return manhattanDist(n);
 	}
 }
-
-
-
 
 void targetCoord(unsigned short& val, unsigned short& x, unsigned short& y)
 {
@@ -467,7 +443,6 @@ void targetCoord(unsigned short& val, unsigned short& x, unsigned short& y)
 	}
 }
 
-
 void addInstance(node*& n)
 {
 	string s = "";
@@ -490,8 +465,8 @@ string makeString(node*& n)
 	return s;
 }
 
-
-void getPath(node*&n){
+void getPath(node*&n)
+{
 	stack<node*> stack;
 	while(n != nullptr){
 		stack.push(n);
@@ -508,52 +483,52 @@ void getPath(node*&n){
 }
 
 
-
-
 int main() 
 {
-
 	int isDefault = -1;
 	int pickSearch = -1;
-	//node* n = new node(); putting this line under while(), and adding delete call at end of while()
 	node* n = new node();
 	node * goal = new node();
 	cout << "Welcome to Rogelio Macedo's 8-puzzle solver. \n";
 	cout << "Enter \"1\" to use a default puzzle, or \"2\" to enter your own puzzle \n";
 	cout << "(Enter -1 to quit)\n\n";
 	cin >> isDefault;
+	while (cin.fail()) {
+			cout << "Error" << endl;
+			cin.clear();
+			cin.ignore(256, '\n');
+			cin >> isDefault;
+		}
 	while (isDefault != -1) {
 		if (isDefault == 1) {
-			cout << "You selected 1.\n";
 			buildDefault(n);
 		}
 		else if (isDefault == 2) {
-			cout << "You selected 2.\n";
 			buildPuzzle(n);
 		}
-		
 		cout << "Enter your choice of algorithm \n";
 		cout << "		1. Uniform Cost Search \n";
 		cout << "		2. A* with Misplaced Tile heuristic \n";
 		cout << "		3. A* with Manhattan heuristic \n";
 		cin >> pickSearch;
-		
-		
-		
+		while (cin.fail()) {
+			cout << "Error" << endl;
+			cin.clear();
+			cin.ignore(256, '\n');
+			cin >> pickSearch;
+		}
 		if (isDefault == -1) {
 			cout << "Bye!\n";
 			return 0;
 		}
 		cout << endl;
-		if (UniformCostSearch(n, goal, pickSearch)) {
-			//goal->print();
+		if (aStar(n, goal, pickSearch)) {
 			cout << "Goal!" << endl;
 			cout << "To solve this problem the search algorithm expanded a total of ";
 			cout << numExpand << " nodes." << endl;
 			cout << "The maximum number of nodes in the queue at any one time was ";
 			cout << maxQsize << "." << endl;
 			cout << "The depth of the goal node was " << finalDepth << "." << endl;
-			
 		}
 		else {
 			cout << "Failure, there is no solution found." << endl;
@@ -562,10 +537,14 @@ int main()
 		maxQsize = 0;
 		numExpand = 0;
 		cout << "Enter \"1\" to use a default puzzle, or \"2\" to enter your own puzzle \n";
-
 		cout << "(Enter -1 to quit)\n\n";
 		cin >> isDefault;
+		while (cin.fail()) {
+			cout << "Error" << endl;
+			cin.clear();
+			cin.ignore(256, '\n');
+			cin >> isDefault;
+		}
 	}
-
 	return 0;
 }
