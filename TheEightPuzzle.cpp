@@ -2,7 +2,6 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <cstdlib>
 #include <cmath>
 #include <string>
 #include <stack>
@@ -232,9 +231,9 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 {
 	bool flagUp = true, flagDown = true, flagLeft = true, flagRight = true;
 	unsigned short row, col;
-	findBlank(currNode, row, col);
-	if (row == 0) {
-		flagUp = false;
+	findBlank(currNode, row, col); //find the coordinates of the blank
+	if (row == 0) {								//The following chained if-elses find select the
+		flagUp = false;							//correct operators to call
 		if (col == 0) {
 			flagLeft = false;
 		}
@@ -260,7 +259,7 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 		}
 	}
 
-	if (flagUp) {
+	if (flagUp) {					//if we can 'move_up', operate
 		node* n = new node(*currNode);
 		UP(row, col, n);
 		n->weight = (currNode->weight + 1);
@@ -273,7 +272,7 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 		}
 	}
 
-	if (flagDown) {
+	if (flagDown) {			//if we can 'move_down', operate
 		node* n = new node(*currNode);
 		DOWN(row, col, n);
 		n->weight = (currNode->weight + 1);
@@ -286,7 +285,7 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 		}
 	}
 
-	if (flagLeft) {
+	if (flagLeft) {				//if we can 'move_left', operate
 		node* n = new node(*currNode);
 		LEFT(row, col, n);
 		n->weight = (currNode->weight + 1);
@@ -299,7 +298,7 @@ void queingFunction(priority_queue<node*, vector<node*>, compare >& q, node*& cu
 		}
 	}
 	
-	if (flagRight) {
+	if (flagRight) {			//if we can 'move_right', operate
 		node* n = new node(*currNode);
 		RIGHT(row, col, n);
 		n->weight = (currNode->weight + 1);
@@ -511,13 +510,13 @@ int main()
 		cout << "		2. A* with Misplaced Tile heuristic \n";
 		cout << "		3. A* with Manhattan heuristic \n";
 		cin >> pickSearch;
-		while (cin.fail()) {
+		while (cin.fail()) {						//while() to check for valid input
 			cout << "Error" << endl;
 			cin.clear();
 			cin.ignore(256, '\n');
 			cin >> pickSearch;
 		}
-		if (isDefault == -1) {
+		if (isDefault == -1) {			//quit if -1
 			cout << "Bye!\n";
 			return 0;
 		}
